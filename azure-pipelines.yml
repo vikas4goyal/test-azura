@@ -15,23 +15,21 @@ jobs:
         outputfile: '$(Build.ArtifactStagingDirectory)\releasenotes.md'
         templateLocation: 'InLine'
         inlinetemplate: |
-          <h1>Release notes for build $defname</h1>  
-          <b>Build Number</b>  : $($build.buildnumber)    <br>  
-          <b>Build started</b> : $("{0:dd/MM/yy HH:mm:ss}" -f [datetime]$build.startTime)     <br>  
-          <b>Source Branch</b> : $($build.sourceBranch)  <br>  
-          
-          # Global list of CS ({{commits.length}})
-          {{#forEach commits}}
-          {{#if isFirst}}### Associated commits{{/if}}
-          * ** ID{{this.id}}** 
-             -  **Message:** {{this.message}}
-             -  **Commited by:** {{this.author.displayName}} 
-             -  **FileCount:** {{this.changes.length}} 
-          {{#forEach this.changes}}
-                -  **File path (TFVC or TfsGit):** {{this.item.path}}  
-                -  **File filename (GitHub):** {{this.filename}}  
-          {{/forEach}}
-          {{/forEach}}
+          # Release notes for build $defname  
+          **Build Number**  : $($build.buildnumber) 
+          **Build Configuration** :  $($build.parameters | ConvertFrom-Json | select -ExpandProperty BuildConfiguration )
+          **Build started** : $("{0:dd/MM/yy HH:mm:ss}" -f [datetime]$build.startTime)  
+          **Source Branch** $($build.sourceBranch)  
+            
+          ## Associated work items  
+          @@WILOOP@@  
+          * **$($widetail.fields.'System.WorkItemType') $($widetail.id)** [Assigned by: $($widetail.fields.'System.AssignedTo'.displayName)] $($widetail.fields.'System.Title')  
+          @@WILOOP@@  
+            
+          ## Associated change sets/commits  
+          @@CSLOOP@@  
+          * **ID $($csdetail.changesetid)$($csdetail.commitid)** $($csdetail.comment)    
+          @@CSLOOP@@
         generateForOnlyPrimary: false
         generateForOnlyTriggerArtifact: false
     - task: PublishBuildArtifacts@1
