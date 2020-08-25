@@ -31,18 +31,6 @@ jobs:
             **Compared Release Number**  : {{compareReleaseDetails.name}}    
             {{/if}}
 
-            {{#if {{lookup buildDetails.triggerInfo 'pr.number'}}}}
-            **Build Trigger PR Number**: {{lookup buildDetails.triggerInfo 'pr.number'}} 
-            {{/if}}
-
-            {{#if pullRequests.length}}
-            # Associated Pull Requests ({{pullRequests.length}})
-            {{#forEach pullRequests}}
-            {{#if isFirst}}### Associated Pull Requests (only shown if  PR) {{/if}}
-            *  **{{this.pullRequestId}}** {{this.title}}
-            {{/forEach}}
-            {{/if}}
-
             {{#forEach commits}}
             {{#if isFirst}}### Associated commits{{/if}}
             * ** ID{{this.id}}** 
