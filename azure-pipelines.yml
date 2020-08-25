@@ -6,69 +6,41 @@ trigger:
 - master
 
 jobs:
-  - job: Notes
-    pool:
-      vmImage: 'windows-latest'
-    steps:
-    - task: GenerateReleaseNotes@3
-      inputs:
-        outputfile: '$(Build.ArtifactStagingDirectory)\releasenotes.md'
-        templateLocation: 'InLine'
-        inlinetemplate: |
-          # Release notes for build $defname  
-          **Build Number**  : $($build.buildnumber) 
-          **Build Configuration** :  $($build.parameters | ConvertFrom-Json | select -ExpandProperty BuildConfiguration )
-          **Build started** : $("{0:dd/MM/yy HH:mm:ss}" -f [datetime]$build.startTime)  
-          **Source Branch** $($build.sourceBranch)  
-            
-          ## Associated work items  
-          @@WILOOP@@  
-          * **$($widetail.fields.'System.WorkItemType') $($widetail.id)** [Assigned by: $($widetail.fields.'System.AssignedTo'.displayName)] $($widetail.fields.'System.Title')  
-          @@WILOOP@@  
-            
-          ## Associated change sets/commits  
-          @@CSLOOP@@  
-          * **ID $($csdetail.changesetid)$($csdetail.commitid)** $($csdetail.comment)    
-          @@CSLOOP@@
-        generateForOnlyPrimary: false
-        generateForOnlyTriggerArtifact: false
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'development'
-        publishLocation: 'Container'
-
   - job: Android
     timeoutInMinutes: 10
     pool:
       vmImage: 'macOS-latest'
     steps:
-    # - task: FlutterInstall@0
-    #   inputs:
-    #     channel: 'stable'
-    #     version: 'latest'
-    
-    # - task: FlutterBuild@0
-    #   inputs:
-    #     target: 'apk'
-    #     projectDirectory: '.'
-    #     buildNumber: '$(Build.BuildID)'
+      - task: XplatGenerateReleaseNotes@3
+        inputs:
+          outputfile: '$(Build.ArtifactStagingDirectory)\releasenotes.md'
+          templateLocation: 'InLine'
+          inlinetemplate: |
+            # Release notes for build $(Build.DefinitionName)
+            **Build Number**  : $($build.buildnumber)
+            **Build started** : $("{0:dd/MM/yy HH:mm:ss}" -f [datetime]$build.startTime)
+            **Source Branch** : $($build.sourceBranch)
+            ### Associated work items
+            @@WILOOP@@
+            * **$($widetail.fields.'System.WorkItemType') $($widetail.id)** [Assigned by: $($widetail.fields.'System.AssignedTo')]     $($widetail.fields.'System.Title')
+            @@WILOOP@@
+            ### Associated change sets/commits
+            @@CSLOOP@@
+            * **ID $($csdetail.changesetid)$($csdetail.commitid)** $($csdetail.comment)
+            @@CSLOOP@@
+          gitHubPat: '$(gitpattoken)'
+          dumpPayloadToConsole: false
+          dumpPayloadToFile: false
+          replaceFile: true
+          getParentsAndChildren: false
 
-    # - task: AndroidSigning@3
-    #   displayName: 'Signing and aligning APK file(s) **/*.apk'
-    #   inputs:
-    #     apkFiles: '**/*.apk'
-    #     apksignerKeystoreFile: 'budgettrackerandroidkye'
-    #     apksignerKeystorePassword: 'mybudgettrackerpass'
-    #     apksignerKeystoreAlias: 'budgettracker'
-    #     apksignerKeyPassword: '$(androidkeypass)'
-    
-    - task: CopyFiles@2
-      inputs:
-        contents: '**/*.apk'
-        targetFolder: '$(build.artifactStagingDirectory)'
-    - task: PublishBuildArtifacts@1
-      inputs:
-        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-        ArtifactName: 'development'
-        publishLocation: 'Container'
+      - task: CopyFiles@2
+        inputs:
+          contents: '**/*.apk'
+          targetFolder: '$(build.artifactStagingDirectory)'
+          
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+          ArtifactName: 'development'
+          publishLocation: 'Container'
