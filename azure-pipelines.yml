@@ -21,12 +21,12 @@ jobs:
     #     target: 'apk'
     #     projectDirectory: '.'
     #     buildNumber: '$(Build.BuildID)'
-
     - task: Bash@3
       inputs:
         targetType: 'inline'
         script: |
           echo "testing"
+          echo "BuildConfiguration is $(buildConfiguration)"
           echo '$(androidkeystorepass)'
           echo '$(androidkeyalias)'
           echo '$(androidkeypass)'
