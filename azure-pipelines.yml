@@ -43,7 +43,6 @@ jobs:
             {{/forEach}}
             {{/if}}
 
-            # Global list of CS ({{commits.length}})
             {{#forEach commits}}
             {{#if isFirst}}### Associated commits{{/if}}
             * ** ID{{this.id}}** 
