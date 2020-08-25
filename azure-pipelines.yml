@@ -25,7 +25,7 @@ jobs:
             **Build Number**: {{json buildDetails}}
             **Build Reason**: {{Build.Reason}}
             **SourceBranch**: {{Build.SourceBranch}}
-            **Compared Release Number**  : {{compareReleaseDetails.name}}    
+            
             **Commit**: {{Build.SourceVersion}}
             
             {{#if compareReleaseDetails.name}}
@@ -44,10 +44,9 @@ jobs:
             {{/forEach}}
           checkStage: true
           gitHubPat: '$(gitpattoken)'
-          dumpPayloadToConsole: false
+          dumpPayloadToConsole: true
           dumpPayloadToFile: false
-          replaceFile: false
-          appendToFile: true
+          replaceFile: true
           getParentsAndChildren: false
 
       - task: PublishBuildArtifacts@1
