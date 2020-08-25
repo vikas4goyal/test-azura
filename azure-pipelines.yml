@@ -49,7 +49,7 @@ jobs:
               -  **Commited by:** {{this.author.displayName}} 
             {{/forEach}}
           gitHubPat: '$(gitpattoken)'
-          dumpPayloadToConsole: true
+          dumpPayloadToConsole: false
           dumpPayloadToFile: false
           replaceFile: true
           getParentsAndChildren: false
