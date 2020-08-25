@@ -26,10 +26,6 @@ jobs:
             **Commit**: {{buildDetails.sourceVersion}}
             **SourceBranch**: {{buildDetails.sourceBranch}}
                         
-            {{#if compareReleaseDetails.name}}
-            **Compared Release Number**  : {{compareReleaseDetails.name}}    
-            {{/if}}
-            
             {{#forEach commits}}
             {{#if isFirst}}### Associated commits{{/if}}
             ** {{this.id}}** 
