@@ -6,6 +6,40 @@ trigger:
 - master
 
 jobs:
+  - job: Notes
+    pool:
+      vmImage: 'windows-latest'
+    steps:
+    - task: GenerateReleaseNotes@3
+      inputs:
+        outputfile: '$(Build.ArtifactStagingDirectory)\releasenotes.md'
+        templateLocation: 'InLine'
+        inlinetemplate: |
+          <h1>Release notes for build $defname</h1>  
+          <b>Build Number</b>  : $($build.buildnumber)    <br>  
+          <b>Build started</b> : $("{0:dd/MM/yy HH:mm:ss}" -f [datetime]$build.startTime)     <br>  
+          <b>Source Branch</b> : $($build.sourceBranch)  <br>  
+          
+          # Global list of CS ({{commits.length}})
+          {{#forEach commits}}
+          {{#if isFirst}}### Associated commits{{/if}}
+          * ** ID{{this.id}}** 
+             -  **Message:** {{this.message}}
+             -  **Commited by:** {{this.author.displayName}} 
+             -  **FileCount:** {{this.changes.length}} 
+          {{#forEach this.changes}}
+                -  **File path (TFVC or TfsGit):** {{this.item.path}}  
+                -  **File filename (GitHub):** {{this.filename}}  
+          {{/forEach}}
+          {{/forEach}}
+        generateForOnlyPrimary: false
+        generateForOnlyTriggerArtifact: false
+    - task: PublishBuildArtifacts@1
+      inputs:
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'development'
+        publishLocation: 'Container'
+
   - job: Android
     timeoutInMinutes: 10
     pool:
@@ -21,21 +55,18 @@ jobs:
     #     target: 'apk'
     #     projectDirectory: '.'
     #     buildNumber: '$(Build.BuildID)'
-    - task: Bash@3
-      inputs:
-        targetType: 'inline'
-        script: |
-          echo "testing"
-          echo "BuildConfiguration is $(buildConfiguration)"
-          echo '$(androidkeystorepass)'
-          echo '$(androidkeyalias)'
-          echo '$(androidkeypass)'
 
-    - task: AndroidSigning@3
-      displayName: 'Signing and aligning APK file(s) **/*.apk'
+    # - task: AndroidSigning@3
+    #   displayName: 'Signing and aligning APK file(s) **/*.apk'
+    #   inputs:
+    #     apkFiles: '**/*.apk'
+    #     apksignerKeystoreFile: 'budgettrackerandroidkye'
+    #     apksignerKeystorePassword: 'mybudgettrackerpass'
+    #     apksignerKeystoreAlias: 'budgettracker'
+    #     apksignerKeyPassword: '$(androidkeypass)'
+
+    - task: PublishBuildArtifacts@1
       inputs:
-        apkFiles: '**/*.apk'
-        apksignerKeystoreFile: 'budgettrackerandroidkye'
-        apksignerKeystorePassword: 'mybudgettrackerpass'
-        apksignerKeystoreAlias: 'budgettracker'
-        apksignerKeyPassword: '$(androidkeypass)'
+        PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        ArtifactName: 'development'
+        publishLocation: 'Container'
