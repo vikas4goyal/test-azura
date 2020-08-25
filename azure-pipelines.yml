@@ -11,6 +11,12 @@ jobs:
     pool:
       vmImage: 'macOS-latest'
     steps:
+
+      - task: CopyFiles@2
+        inputs:
+          contents: '**/*.apk'
+          targetFolder: '$(build.artifactStagingDirectory)'
+
       - task: XplatGenerateReleaseNotes@3
         inputs:
           outputfile: '$(Build.ArtifactStagingDirectory)\releasenotes.md'
@@ -43,16 +49,11 @@ jobs:
               -  **Commited by:** {{this.author.displayName}} 
             {{/forEach}}
           gitHubPat: '$(gitpattoken)'
-          dumpPayloadToConsole: false
+          dumpPayloadToConsole: true
           dumpPayloadToFile: false
           replaceFile: true
           getParentsAndChildren: false
 
-      - task: CopyFiles@2
-        inputs:
-          contents: '**/*.apk'
-          targetFolder: '$(build.artifactStagingDirectory)'
-          
       - task: PublishBuildArtifacts@1
         inputs:
           PathtoPublish: '$(Build.ArtifactStagingDirectory)'
