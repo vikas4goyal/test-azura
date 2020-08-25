@@ -22,27 +22,27 @@ jobs:
           outputfile: '$(build.artifactStagingDirectory)/releasenotes.md'
           templateLocation: 'InLine'
           inlinetemplate: |
-            **Build Number**: {{Build.BuildNumber}}
+            **Build Number**: {{json buildDetails}}
             **Build Reason**: {{Build.Reason}}
             **SourceBranch**: {{Build.SourceBranch}}
+            **Compared Release Number**  : {{compareReleaseDetails.name}}    
             **Commit**: {{Build.SourceVersion}}
-
+            
             {{#if compareReleaseDetails.name}}
             **Compared Release Number**  : {{compareReleaseDetails.name}}    
             {{/if}}
-
+            
             {{#forEach commits}}
             {{#if isFirst}}### Associated commits{{/if}}
-            * ** ID{{this.id}}** 
+            ** {{this.id}}** 
                -  **Message:** {{this.message}}
                -  **Commited by:** {{this.author.displayName}} 
                -  **FileCount:** {{this.changes.length}} 
             {{#forEach this.changes}}
-                {{#if this.item.path}} -  **File path (TFVC or TfsGit):** {{this.item.path}} {{/if}}     
-                {{#if this.item.path}} -  **File filename (GitHub):** {{this.filename}}  {{/if}}
+                -  **File filename (GitHub):** {{this.filename}}
             {{/forEach}}
             {{/forEach}}
-            
+          checkStage: true
           gitHubPat: '$(gitpattoken)'
           dumpPayloadToConsole: false
           dumpPayloadToFile: false
