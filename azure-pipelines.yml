@@ -1,0 +1,41 @@
+# Flutter build
+variables:
+  projectDirectory: 'BudgetTracker-Mobile'
+
+trigger:
+- master
+
+jobs:
+  - job: Android
+    timeoutInMinutes: 10
+    pool:
+      vmImage: 'macOS-latest'
+    steps:
+    # - task: FlutterInstall@0
+    #   inputs:
+    #     channel: 'stable'
+    #     version: 'latest'
+    
+    # - task: FlutterBuild@0
+    #   inputs:
+    #     target: 'apk'
+    #     projectDirectory: '.'
+    #     buildNumber: '$(Build.BuildID)'
+
+    - task: Bash@3
+      inputs:
+        targetType: 'inline'
+        script: |
+          echo "testing"
+          echo '$(androidkeystorepass)'
+          echo '$(androidkeyalias)'
+          echo '$(androidkeypass)'
+
+    - task: AndroidSigning@3
+      displayName: 'Signing and aligning APK file(s) **/*.apk'
+      inputs:
+        apkFiles: '**/*.apk'
+        apksignerKeystoreFile: 'budgettracker_release.keystore'
+        apksignerKeystorePassword: '$(androidkeystorepass)'
+        apksignerKeystoreAlias: '$(androidkeyalias)'
+        apksignerKeyPassword: '$(androidkeypass)'
