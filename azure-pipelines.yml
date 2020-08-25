@@ -36,6 +36,6 @@ jobs:
       inputs:
         apkFiles: '**/*.apk'
         apksignerKeystoreFile: 'budgettrackerandroidkye'
-        apksignerKeystorePassword: '$(androidkeystorepass)'
-        apksignerKeystoreAlias: '$(androidkeyalias)'
-        apksignerKeyPassword: '$(androidkeypass)'
+        apksignerKeystorePassword: 'mybudgettrackerpass'
+        apksignerKeystoreAlias: 'budgettracker'
+        apksignerKeyPassword: 'mybudgettrackerpass'
