@@ -16,18 +16,32 @@ jobs:
           outputfile: '$(Build.ArtifactStagingDirectory)\releasenotes.md'
           templateLocation: 'InLine'
           inlinetemplate: |
-            # Release notes for build $(Build.DefinitionName)
-            **Build Number**  : $($build.buildnumber)
-            **Build started** : $("{0:dd/MM/yy HH:mm:ss}" -f [datetime]$build.startTime)
-            **Source Branch** : $($build.sourceBranch)
-            ### Associated work items
-            @@WILOOP@@
-            * **$($widetail.fields.'System.WorkItemType') $($widetail.id)** [Assigned by: $($widetail.fields.'System.AssignedTo')]     $($widetail.fields.'System.Title')
-            @@WILOOP@@
-            ### Associated change sets/commits
-            @@CSLOOP@@
-            * **ID $($csdetail.changesetid)$($csdetail.commitid)** $($csdetail.comment)
-            @@CSLOOP@@
+            # Notes for build 
+            **Build Number**: {{buildDetails.id}}
+            **Build Trigger PR Number**: {{lookup buildDetails.triggerInfo 'pr.number'}} 
+            
+            # Associated Pull Requests ({{pullRequests.length}})
+            {{#forEach pullRequests}}
+            {{#if isFirst}}### Associated Pull Requests (only shown if  PR) {{/if}}
+            *  **{{this.pullRequestId}}** {{this.title}}
+            {{/forEach}}
+            
+            # Global list of WI ({{workItems.length}})
+            {{#forEach workItems}}
+            {{#if isFirst}}## Associated Work Items (only shown if  WI) {{/if}}
+            *  **{{this.id}}**  {{lookup this.fields 'System.Title'}}
+              - **WIT** {{lookup this.fields 'System.WorkItemType'}} 
+              - **Tags** {{lookup this.fields 'System.Tags'}}
+              - **Assigned** {{#with (lookup this.fields 'System.AssignedTo')}} {{displayName}} {{/with}}
+            {{/forEach}}
+            
+            # Global list of CS ({{commits.length}})
+            {{#forEach commits}}
+            {{#if isFirst}}### Associated commits  (only shown if CS) {{/if}}
+            * ** ID{{this.id}}** 
+              -  **Message:** {{this.message}}
+              -  **Commited by:** {{this.author.displayName}} 
+            {{/forEach}}
           gitHubPat: '$(gitpattoken)'
           dumpPayloadToConsole: false
           dumpPayloadToFile: false
