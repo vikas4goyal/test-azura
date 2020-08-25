@@ -38,4 +38,4 @@ jobs:
         apksignerKeystoreFile: 'budgettrackerandroidkye'
         apksignerKeystorePassword: 'mybudgettrackerpass'
         apksignerKeystoreAlias: 'budgettracker'
-        apksignerKeyPassword: 'mybudgettrackerpass'
+        apksignerKeyPassword: '$(androidkeypass)'
