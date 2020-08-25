@@ -35,7 +35,7 @@ jobs:
       displayName: 'Signing and aligning APK file(s) **/*.apk'
       inputs:
         apkFiles: '**/*.apk'
-        apksignerKeystoreFile: 'budgettracker_release.keystore'
+        apksignerKeystoreFile: 'budgettrackerandroidkye'
         apksignerKeystorePassword: '$(androidkeystorepass)'
         apksignerKeystoreAlias: '$(androidkeyalias)'
         apksignerKeyPassword: '$(androidkeypass)'
