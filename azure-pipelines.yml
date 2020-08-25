@@ -36,7 +36,6 @@ jobs:
                   -  **File filename :** {{this.filename}}  
             {{/forEach}}
             {{/forEach}}
-          checkStage: true
           gitHubPat: '$(gitpattoken)'
           dumpPayloadToConsole: false
           dumpPayloadToFile: false
