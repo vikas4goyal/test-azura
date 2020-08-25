@@ -19,7 +19,7 @@ jobs:
 
       - task: XplatGenerateReleaseNotes@3
         inputs:
-          outputfile: '$(Build.ArtifactStagingDirectory)\releasenotes.md'
+          outputfile: '$(build.artifactStagingDirectory)\releasenotes.md'
           templateLocation: 'InLine'
           inlinetemplate: |
             # Notes for build 
@@ -51,7 +51,8 @@ jobs:
           gitHubPat: '$(gitpattoken)'
           dumpPayloadToConsole: false
           dumpPayloadToFile: false
-          replaceFile: true
+          replaceFile: false
+          appendToFile: True
           getParentsAndChildren: false
 
       - task: PublishBuildArtifacts@1
