@@ -22,19 +22,11 @@ jobs:
           outputfile: '$(build.artifactStagingDirectory)/releasenotes.md'
           templateLocation: 'InLine'
           inlinetemplate: |
-            #### Build Number: {{buildDetails.id}}
-            #### Commit: {{buildDetails.sourceVersion}}
-            #### SourceBranch: {{buildDetails.sourceBranch}}
-                        
+            #### Commit:{{buildDetails.sourceVersion}}
+            #### Branch: {{buildDetails.sourceBranch}}
             {{#forEach commits}}
-            {{#if isFirst}}### Associated commits{{/if}}
-            * ** {{this.id}}** 
-               -  **Message:** {{this.message}}
-               -  **Commited by:** {{this.author.displayName}} 
-               -  **FileCount:** {{this.changes.length}} 
-            {{#forEach this.changes}}
-                  -  **File filename :** {{this.filename}}  
-            {{/forEach}}
+            {{#if isFirst}}### Release Notes:{{/if}}
+            * {{this.message}}
             {{/forEach}}
           gitHubPat: '$(gitpattoken)'
           dumpPayloadToConsole: false
