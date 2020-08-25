@@ -22,12 +22,10 @@ jobs:
           outputfile: '$(build.artifactStagingDirectory)/releasenotes.md'
           templateLocation: 'InLine'
           inlinetemplate: |
-            **Build Number**: {{json buildDetails}}
-            **Build Reason**: {{Build.Reason}}
-            **SourceBranch**: {{Build.SourceBranch}}
-            
-            **Commit**: {{Build.SourceVersion}}
-            
+            **Build Number**: {{buildDetails.id}}
+            **Commit**: {{buildDetails.sourceVersion}}
+            **SourceBranch**: {{buildDetails.sourceBranch}}
+                        
             {{#if compareReleaseDetails.name}}
             **Compared Release Number**  : {{compareReleaseDetails.name}}    
             {{/if}}
@@ -44,7 +42,7 @@ jobs:
             {{/forEach}}
           checkStage: true
           gitHubPat: '$(gitpattoken)'
-          dumpPayloadToConsole: true
+          dumpPayloadToConsole: false
           dumpPayloadToFile: false
           replaceFile: true
           getParentsAndChildren: false
