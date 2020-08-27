@@ -1,8 +1,7 @@
 # Flutter build
 variables:
 - group: my-variable-group
-- name: my-passed-variable
-  value: $[variables.myhello] # uses runtime expression
+
 
 trigger:
 - master
@@ -20,10 +19,6 @@ jobs:
           targetFolder: '$(build.artifactStagingDirectory)'
 
       - script: echo $(myhello)
-      - script: echo $(my-passed-variable) 
-      - script: echo $(variables.myhello)
-      - script: echo $(my-variable-group.myhello)
-      - script: echo $[my-variable-group.myhello] 
 
       - task: XplatGenerateReleaseNotes@3
         inputs:
