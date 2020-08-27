@@ -1,11 +1,14 @@
 # Flutter build
 variables:
 - group: my-variable-group
+- name: build-number
+  value: '$(Date:yyyyMMdd)'
 
 
 trigger:
 - master
 
+name: $(TeamProject)_$(Build.DefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 jobs:
   - job: Android
     timeoutInMinutes: 10
@@ -18,6 +21,9 @@ jobs:
           contents: '**/*.apk'
           targetFolder: '$(build.artifactStagingDirectory)'
 
+      - script: echo $(SourceBranchName)
+      - script: echo $(Build.BuildNumber)
+      - script: echo $(build-number)
       - script: echo $(myhello)
 
       - task: XplatGenerateReleaseNotes@3
@@ -25,6 +31,7 @@ jobs:
           outputfile: '$(build.artifactStagingDirectory)/releasenotes.md'
           templateLocation: 'InLine'
           inlinetemplate: |
+            #### source branch:  $(SourceBranchName)
             #### Commit:{{buildDetails.sourceVersion}}
             #### Branch: {{buildDetails.sourceBranch}}
             {{#forEach commits}}
