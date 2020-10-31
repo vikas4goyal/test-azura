@@ -19,7 +19,7 @@ jobs:
       inputs:
         targetType: 'inline'
         script: |
-            [string] $dateTime = (Get-Date -Format 'yy.MM.dd.HHmm')
+            [string] $dateTime = (Get-Date -Format 'yyMMddHHmm')
             Write-Host "Setting the name of the build to '$dateTime'."
             WrSetite-Host "##vso[build.updatebuildnumber]$dateTime"  
 
