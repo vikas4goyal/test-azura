@@ -21,7 +21,7 @@ jobs:
         script: |
             [string] $dateTime = (Get-Date -Format 'yyMMddHHmm')
             Write-Host "Setting the name of the build to '$dateTime'"
-            WrSetite-Host "##vso[build.updatebuildnumber]$dateTime"  
+            Write-Host "##vso[build.updatebuildnumber]$dateTime"  
 
       # - task: CopyFiles@2
       #   inputs:
