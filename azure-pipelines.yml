@@ -19,7 +19,7 @@ jobs:
       inputs:
         targetType: 'inline'
         script: |
-            -TimeZone -Id "China Standard Time"
+            Set-TimeZone -Id "China Standard Time"
             [string] $dateTime = (Get-Date -Format 'yy.MM.dd.HHmm')
             Write-Host "Setting the name of the build to '$dateTime'."
             WrSetite-Host "##vso[build.updatebuildnumber]$dateTime"  
