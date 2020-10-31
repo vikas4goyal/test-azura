@@ -11,42 +11,50 @@ trigger:
 name: $(Date:yyyyMMdd)$(BuildID)
 jobs:
   - job: Android
-    timeoutInMinutes: 10
     pool:
       vmImage: 'macOS-latest'
     steps:
+    - script: echo $(Build.BuildNumber)
+    - task: PowerShell@2
+      inputs:
+        targetType: 'inline'
+        script: |
+            -TimeZone -Id "China Standard Time"
+            [string] $dateTime = (Get-Date -Format 'yy.MM.dd.HHmm')
+            Write-Host "Setting the name of the build to '$dateTime'."
+            WrSetite-Host "##vso[build.updatebuildnumber]$dateTime"  
 
-      - task: CopyFiles@2
-        inputs:
-          contents: '**/*.apk'
-          targetFolder: '$(build.artifactStagingDirectory)'
+      # - task: CopyFiles@2
+      #   inputs:
+      #     contents: '**/*.apk'
+      #     targetFolder: '$(build.artifactStagingDirectory)'
 
-      - script: echo $(SourceBranchName)
-      - script: echo $(Build.BuildNumber)
-      - script: echo $(Build.BuildNumber)
-      - script: echo $(build-number)
-      - script: echo $(myhello)
+    - script: echo $(SourceBranchName)
+    - script: echo $(Build.BuildNumber)
+    - script: echo $(Build.BuildNumber)
+    - script: echo $(build-number)
+    - script: echo $(myhello)
 
-      - task: XplatGenerateReleaseNotes@3
-        inputs:
-          outputfile: '$(build.artifactStagingDirectory)/releasenotes.md'
-          templateLocation: 'InLine'
-          inlinetemplate: |
-            #### source branch:  $(SourceBranchName)
-            #### Commit:{{buildDetails.sourceVersion}}
-            #### Branch: {{buildDetails.sourceBranch}}
-            {{#forEach commits}}
-            {{#if isFirst}}### Release Notes:{{/if}}
-            * {{this.message}}
-            {{/forEach}}
-          gitHubPat: '$(gitpattoken)'
-          dumpPayloadToConsole: false
-          dumpPayloadToFile: false
-          replaceFile: true
-          getParentsAndChildren: false
+      # - task: XplatGenerateReleaseNotes@3
+      #   inputs:
+      #     outputfile: '$(build.artifactStagingDirectory)/releasenotes.md'
+      #     templateLocation: 'InLine'
+      #     inlinetemplate: |
+      #       #### source branch:  $(SourceBranchName)
+      #       #### Commit:{{buildDetails.sourceVersion}}
+      #       #### Branch: {{buildDetails.sourceBranch}}
+      #       {{#forEach commits}}
+      #       {{#if isFirst}}### Release Notes:{{/if}}
+      #       * {{this.message}}
+      #       {{/forEach}}
+      #     gitHubPat: '$(gitpattoken)'
+      #     dumpPayloadToConsole: false
+      #     dumpPayloadToFile: false
+      #     replaceFile: true
+      #     getParentsAndChildren: false
 
-      - task: PublishBuildArtifacts@1
-        inputs:
-          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-          ArtifactName: 'development'
-          publishLocation: 'Container'
+      # - task: PublishBuildArtifacts@1
+      #   inputs:
+      #     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+      #     ArtifactName: 'development'
+      #     publishLocation: 'Container'
