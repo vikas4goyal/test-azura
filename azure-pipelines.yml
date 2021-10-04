@@ -25,7 +25,12 @@ jobs:
       inputs:
         targetType: 'inline'
         script: |
-            echo "This is CI" 
+          ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
+            echo "This is CI on main"
+            echo "This is CI on main"  
+          ${{ if ne(variables['Build.SourceBranchName'], 'main') }}:
+            echo "This is CI on other" 
+            echo "This is CI on other" 
 
     - task: Bash@3
       condition: and(succeeded(), eq(variables.isMain, 'true'))
