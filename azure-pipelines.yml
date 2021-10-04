@@ -25,10 +25,10 @@ jobs:
       inputs:
         targetType: 'inline'
         script: |
-          ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
+          ${{ if eq(variables.isMain, 'true') }}:
             echo "This is CI on main"
             echo "This is CI on main"  
-          ${{ if ne(variables['Build.SourceBranchName'], 'main') }}:
+          ${{ if ne(variables.isMain, 'true') }}:
             echo "This is CI on other" 
             echo "This is CI on other" 
 
