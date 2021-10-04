@@ -1,54 +1,44 @@
 # Flutter build
 variables:
 - group: my-variable-group
-- name: build-number
-  value: '$(Date:yyyyMMdd)'
-
+- name: isMain
+  value: $[eq(variables['Build.SourceBranch'], 'refs/heads/master')]
+- name: isDevelop
+  value: $[eq(variables['Build.SourceBranch'], 'refs/heads/develop')]
 
 trigger:
-- master
+  batch: true
+  branches:
+    include:
+    - '*'
+    exclude:
+    - master
 
 name: $(Date:yyyyMMdd)$(BuildID)
 jobs:
   - job: Android
     pool:
-      vmImage: 'macOS-latest'
+      vmImage: 'ubuntu-18.04'
     steps:
-    - script: echo $(Build.BuildNumber)
     - task: Bash@3
+      displayName: 'Common Task'
       inputs:
         targetType: 'inline'
         script: |
-            echo "##vso[task.setvariable variable=testvar;]testvalue" 
+            echo "This is CI" 
 
-      # - task: CopyFiles@2
-      #   inputs:
-      #     contents: '**/*.apk'
-      #     targetFolder: '$(build.artifactStagingDirectory)'
+    - task: Bash@3
+      condition: and(succeeded(), eq(variables.isMain, 'true'))
+      displayName: 'Master Branch'
+      inputs:
+        targetType: 'inline'
+        script: |
+            echo "this is Master task" 
 
-    - script: echo $(Build.BuildNumber)
-    - script: echo $(Build.BuildNumber)
-
-      # - task: XplatGenerateReleaseNotes@3
-      #   inputs:
-      #     outputfile: '$(build.artifactStagingDirectory)/releasenotes.md'
-      #     templateLocation: 'InLine'
-      #     inlinetemplate: |
-      #       #### source branch:  $(SourceBranchName)
-      #       #### Commit:{{buildDetails.sourceVersion}}
-      #       #### Branch: {{buildDetails.sourceBranch}}
-      #       {{#forEach commits}}
-      #       {{#if isFirst}}### Release Notes:{{/if}}
-      #       * {{this.message}}
-      #       {{/forEach}}
-      #     gitHubPat: '$(gitpattoken)'
-      #     dumpPayloadToConsole: false
-      #     dumpPayloadToFile: false
-      #     replaceFile: true
-      #     getParentsAndChildren: false
-
-      # - task: PublishBuildArtifacts@1
-      #   inputs:
-      #     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-      #     ArtifactName: 'development'
-      #     publishLocation: 'Container'
+    - task: Bash@3
+      condition: and(succeeded(), eq(variables.isDevelop, 'true'))
+      displayName: 'Develop Branch'    
+      inputs:
+        targetType: 'inline'
+        script: |
+            echo "This is Development"
