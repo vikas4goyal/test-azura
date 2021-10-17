@@ -1,16 +1,16 @@
 pipeline {
-  agent none
+  agent {
+    docker {
+      image 'vikas4goyal/aws-sam:0.0.1'
+      args '-v /var/run/docker.sock:/var/run/docker.sock'
+    }
+
+  }
   stages {
     stage('Stage 1') {
       parallel {
         stage('Stage 1') {
-          agent {
-            docker {
-              args '-v /var/run/docker.sock:/var/run/docker.sock'
-              image 'vikas4goyal/aws-sam:0.0.1'
-            }
-
-          }
+          agent any
           steps {
             sleep 1
             sh 'mkdir -p build/YBAAuthorizer && touch build/YBAAuthorizer/myfile.txt'
@@ -20,13 +20,7 @@ pipeline {
         }
 
         stage('Stage 2') {
-          agent {
-            docker {
-              image 'vikas4goyal/aws-sam:0.0.1'
-              args '-v /var/run/docker.sock:/var/run/docker.sock'
-            }
-
-          }
+          agent any
           steps {
             sleep 1
             sh 'mkdir -p build/Login && touch build/Login/myfile.txt'
@@ -35,13 +29,7 @@ pipeline {
         }
 
         stage('Stage 3') {
-          agent {
-            docker {
-              args '-v /var/run/docker.sock:/var/run/docker.sock'
-              image 'vikas4goyal/aws-sam:0.0.1'
-            }
-
-          }
+          agent any
           steps {
             sleep 1
             echo 'I am Awake'
@@ -54,13 +42,7 @@ pipeline {
     }
 
     stage('After') {
-      agent {
-        docker {
-          image 'vikas4goyal/aws-sam:0.0.1'
-          args '-v /var/run/docker.sock:/var/run/docker.sock'
-        }
-
-      }
+      agent any
       steps {
         echo 'All Step Done'
         unstash 'stage-1'
