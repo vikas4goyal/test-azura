@@ -2,7 +2,7 @@ pipeline {
   agent {
     docker {
       image 'vikas4goyal/aws-sam:0.0.1'
-      args '-v /var/run/docker.sock:/var/run/docker.sock type=bind,source=/tmp,target=/tmp'
+      args '-v /var/run/docker.sock:/var/run/docker.sock'
     }
 
   }
