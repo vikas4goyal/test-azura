@@ -15,7 +15,7 @@ pipeline {
             sleep 10
             sh 'mkdir -p build/YBAAuthorizer && touch build/YBAAuthorizer/myfile.txt'
             sh 'ls build/YBAAuthorizer'
-            stash(name: 'stage-1', includes: '${pwd}/build/**')
+            stash(name: 'stage-1', includes: 'build/**')
           }
         }
 
