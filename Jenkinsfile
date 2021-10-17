@@ -15,7 +15,7 @@ pipeline {
             sleep 10
             sh 'mkdir -p build/YBAAuthorizer && touch build/YBAAuthorizer/myfile.txt'
             sh 'ls build/YBAAuthorizer'
-            stash(name: 'stage-1', includes: '${pwd}/build/*')
+            stash(name: 'stage-1', includes: '${pwd}/build/**')
           }
         }
 
@@ -30,7 +30,7 @@ pipeline {
           steps {
             sleep 10
             sh 'mkdir -p build/Login && touch build/Login/myfile.txt'
-            stash(includes: 'build/*', name: 'stage-2')
+            stash(includes: 'build/**', name: 'stage-2')
           }
         }
 
@@ -46,7 +46,7 @@ pipeline {
             sleep 20
             echo 'I am Awake'
             sh 'mkdir -p build/Register && touch build/Register/myfile.txt'
-            stash(includes: 'build/*', name: 'stage-3')
+            stash(includes: 'build/**', name: 'stage-3')
           }
         }
 
