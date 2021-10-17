@@ -13,14 +13,14 @@ pipeline {
           agent any
           steps {
             sleep 1
-            sh 'mkdir -p build/YBAAuthorizer && touch build/YBAAuthorizer/myfile.txt'
-            sh 'ls build/YBAAuthorizer'
-            stash(name: 'stage-1', includes: 'build/**')
             script {
               sh 'ls'
               echo 'mytest'
             }
 
+            sh 'mkdir -p build/YBAAuthorizer && touch build/YBAAuthorizer/myfile.txt'
+            sh 'ls build/YBAAuthorizer'
+            stash(name: 'stage-1', includes: 'build/**')
           }
         }
 
