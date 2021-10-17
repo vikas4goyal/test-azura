@@ -12,8 +12,9 @@ pipeline {
 
           }
           steps {
-            sleep 30
-            sh 'ls'
+            sleep 10
+            sh 'mkdir -p build/YBAAuthorizer && touch build/YBAAuthorizer/myfile.txt'
+            stash(name: 'stage-1', allowEmpty: true, includes: 'build/*')
           }
         }
 
@@ -26,8 +27,9 @@ pipeline {
 
           }
           steps {
-            sleep 30
-            sh 'ls'
+            sleep 10
+            sh 'mkdir -p build/Login && touch build/Login/myfile.txt'
+            stash(includes: 'build/*', name: 'stage-2')
           }
         }
 
@@ -40,36 +42,10 @@ pipeline {
 
           }
           steps {
-            sleep 30
+            sleep 20
             echo 'I am Awake'
-          }
-        }
-
-        stage('Stage 4') {
-          agent {
-            docker {
-              image 'vikas4goyal/aws-sam:0.0.1'
-              args '-v /var/run/docker.sock:/var/run/docker.sock'
-            }
-
-          }
-          steps {
-            sleep 40
-            echo 'I am Awake'
-          }
-        }
-
-        stage('Stage 5') {
-          agent {
-            docker {
-              args '-v /var/run/docker.sock:/var/run/docker.sock'
-              image 'vikas4goyal/aws-sam:0.0.1'
-            }
-
-          }
-          steps {
-            sleep 60
-            echo 'I am Awake'
+            sh 'mkdir -p build/Register && touch build/Register/myfile.txt'
+            stash(includes: 'build/*', name: 'stage-3')
           }
         }
 
@@ -87,6 +63,16 @@ pipeline {
       steps {
         sleep 30
         echo 'All Step Done'
+        dir(path: 'build/') {
+          unstash 'stage-1'
+          unstash 'stage-2'
+          unstash 'stage-3'
+          sh 'pwd'
+          sh 'ls'
+        }
+
+        sh 'ls'
+        sh 'pwd'
       }
     }
 
