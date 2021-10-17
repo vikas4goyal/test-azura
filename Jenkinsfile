@@ -11,38 +11,51 @@ pipeline {
       parallel {
         stage('Stage 1') {
           steps {
-            sleep 30
-            echo 'I am awake'
-            sh 'pwd'
-            sh 'ls'
+            node(label: 'Stage 1') {
+              sleep 30
+              sh 'ls'
+            }
+
           }
         }
 
         stage('Stage 2') {
           steps {
-            sleep 30
-            echo 'I am awake'
+            node(label: 'Stage 2 Node') {
+              sleep 30
+              sh 'ls'
+            }
+
           }
         }
 
         stage('Stage 3') {
           steps {
-            sleep 30
-            echo 'I am Awake'
+            node(label: 'Stage 3 Node') {
+              sleep 30
+              echo 'I am Awake'
+            }
+
           }
         }
 
         stage('Stage 4') {
           steps {
-            sleep 40
-            echo 'I am Awake'
+            node(label: 'Stage 4 Node') {
+              sleep 40
+              echo 'I am Awake'
+            }
+
           }
         }
 
         stage('Stage 5') {
           steps {
-            sleep 60
-            echo 'I am Awake'
+            node(label: 'Stage 5 Node') {
+              sleep 60
+              echo 'I am Awake'
+            }
+
           }
         }
 
